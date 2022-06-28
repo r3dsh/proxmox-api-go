@@ -12,3 +12,9 @@ const (
     NetworkOVSIntPort  = "OVSIntPort"
     NetworkUnknown     = "unknown"
 )
+
+type Ticket struct {
+    CSRFPreventionToken string `json:"CSRFPreventionToken"`
+    Ticket              string `json:"ticket"`
+    Username            string `json:"username"`
+}

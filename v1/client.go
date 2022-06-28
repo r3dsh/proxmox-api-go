@@ -9,8 +9,6 @@ import (
     validator "gopkg.in/validator.v2"
 )
 
-var Log Logger
-
 type Client struct {
     ticket   Ticket
     config   *Config
