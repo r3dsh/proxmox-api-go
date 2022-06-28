@@ -119,6 +119,32 @@ func (c *Client) ClusterMetricsServerIndex() ([]*ClusterMetricsServerIndexRespon
 	return res, nil
 }
 
+// ClusterMetricsServerUpdate PUT /cluster/metrics/server/{id}
+// Update metric server configuration.
+//
+func (c *Client) ClusterMetricsServerUpdate(req ClusterMetricsServerUpdateRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterMetricsServerUpdate: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("ClusterMetricsServerUpdate: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/cluster/metrics/server/%v", req.Id), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterMetricsServerUpdate: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // ClusterMetricsServerDelete DELETE /cluster/metrics/server/{id}
 // Remove Metric server.
 //
@@ -181,32 +207,6 @@ func (c *Client) ClusterMetricsServerCreate(req ClusterMetricsServerCreateReques
 
 	if err != nil {
 		return fmt.Errorf("ClusterMetricsServerCreate: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// ClusterMetricsServerUpdate PUT /cluster/metrics/server/{id}
-// Update metric server configuration.
-//
-func (c *Client) ClusterMetricsServerUpdate(req ClusterMetricsServerUpdateRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterMetricsServerUpdate: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("ClusterMetricsServerUpdate: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/cluster/metrics/server/%v", req.Id), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterMetricsServerUpdate: %v", err)
 	}
 
 	// output
@@ -352,23 +352,6 @@ func (c *Client) ClusterConfigJoin(req ClusterConfigJoinRequest) error {
 	return nil
 }
 
-// ClusterFirewallGroupsListSecurity GET /cluster/firewall/groups
-// List security groups.
-//
-func (c *Client) ClusterFirewallGroupsListSecurity() ([]*ClusterFirewallGroupsListSecurityResponse, error) {
-	var err error
-
-	var res []*ClusterFirewallGroupsListSecurityResponse
-	err = c.Request("GET", "/cluster/firewall/groups", nil, &res)
-
-	if err != nil {
-		return nil, fmt.Errorf("ClusterFirewallGroupsListSecurity: %v", err)
-	}
-
-	// output
-	return res, nil
-}
-
 // ClusterFirewallGroupsCreateSecurityGroup POST /cluster/firewall/groups
 // Create new security group.
 //
@@ -393,6 +376,23 @@ func (c *Client) ClusterFirewallGroupsCreateSecurityGroup(req ClusterFirewallGro
 
 	// output
 	return nil
+}
+
+// ClusterFirewallGroupsListSecurity GET /cluster/firewall/groups
+// List security groups.
+//
+func (c *Client) ClusterFirewallGroupsListSecurity() ([]*ClusterFirewallGroupsListSecurityResponse, error) {
+	var err error
+
+	var res []*ClusterFirewallGroupsListSecurityResponse
+	err = c.Request("GET", "/cluster/firewall/groups", nil, &res)
+
+	if err != nil {
+		return nil, fmt.Errorf("ClusterFirewallGroupsListSecurity: %v", err)
+	}
+
+	// output
+	return res, nil
 }
 
 // ClusterFirewallGroupsDeleteSecurityGroup DELETE /cluster/firewall/groups/{group}
@@ -464,32 +464,6 @@ func (c *Client) ClusterFirewallGroupsCreateRule(req ClusterFirewallGroupsCreate
 	return nil
 }
 
-// ClusterFirewallGroupsUpdateRule PUT /cluster/firewall/groups/{group}/{pos}
-// Modify rule data.
-//
-func (c *Client) ClusterFirewallGroupsUpdateRule(req ClusterFirewallGroupsUpdateRuleRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterFirewallGroupsUpdateRule: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("ClusterFirewallGroupsUpdateRule: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/cluster/firewall/groups/%v/%v", req.Group, req.Pos), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterFirewallGroupsUpdateRule: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterFirewallGroupsDeleteRule DELETE /cluster/firewall/groups/{group}/{pos}
 // Delete rule.
 //
@@ -531,6 +505,32 @@ func (c *Client) ClusterFirewallGroupsGetRule(req ClusterFirewallGroupsGetRuleRe
 
 	// output
 	return res, nil
+}
+
+// ClusterFirewallGroupsUpdateRule PUT /cluster/firewall/groups/{group}/{pos}
+// Modify rule data.
+//
+func (c *Client) ClusterFirewallGroupsUpdateRule(req ClusterFirewallGroupsUpdateRuleRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterFirewallGroupsUpdateRule: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("ClusterFirewallGroupsUpdateRule: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/cluster/firewall/groups/%v/%v", req.Group, req.Pos), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterFirewallGroupsUpdateRule: %v", err)
+	}
+
+	// output
+	return nil
 }
 
 // ClusterFirewallRulesGet GET /cluster/firewall/rules
@@ -688,32 +688,6 @@ func (c *Client) ClusterFirewallIpsetCreate(req ClusterFirewallIpsetCreateReques
 	return nil
 }
 
-// ClusterFirewallIpsetCreateIp POST /cluster/firewall/ipset/{name}
-// Add IP or Network to IPSet.
-//
-func (c *Client) ClusterFirewallIpsetCreateIp(req ClusterFirewallIpsetCreateIpRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterFirewallIpsetCreateIp: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("ClusterFirewallIpsetCreateIp: %v", err)
-	}
-
-	err = c.Request("POST", fmt.Sprintf("/cluster/firewall/ipset/%v", req.Name), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterFirewallIpsetCreateIp: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterFirewallIpsetDelete DELETE /cluster/firewall/ipset/{name}
 // Delete IPSet
 //
@@ -755,6 +729,32 @@ func (c *Client) ClusterFirewallIpsetGet(req ClusterFirewallIpsetGetRequest) ([]
 
 	// output
 	return res, nil
+}
+
+// ClusterFirewallIpsetCreateIp POST /cluster/firewall/ipset/{name}
+// Add IP or Network to IPSet.
+//
+func (c *Client) ClusterFirewallIpsetCreateIp(req ClusterFirewallIpsetCreateIpRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterFirewallIpsetCreateIp: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("ClusterFirewallIpsetCreateIp: %v", err)
+	}
+
+	err = c.Request("POST", fmt.Sprintf("/cluster/firewall/ipset/%v", req.Name), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterFirewallIpsetCreateIp: %v", err)
+	}
+
+	// output
+	return nil
 }
 
 // ClusterFirewallIpsetRemoveIp DELETE /cluster/firewall/ipset/{name}/{cidr}
@@ -868,27 +868,6 @@ func (c *Client) ClusterFirewallAliasesCreateAlias(req ClusterFirewallAliasesCre
 	return nil
 }
 
-// ClusterFirewallAliasesReadAlias GET /cluster/firewall/aliases/{name}
-// Read alias.
-//
-func (c *Client) ClusterFirewallAliasesReadAlias(req ClusterFirewallAliasesReadAliasRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterFirewallAliasesReadAlias: %v", err)
-	}
-
-	err = c.Request("GET", fmt.Sprintf("/cluster/firewall/aliases/%v", req.Name), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterFirewallAliasesReadAlias: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterFirewallAliasesUpdateAlias PUT /cluster/firewall/aliases/{name}
 // Update IP or Network alias.
 //
@@ -930,6 +909,27 @@ func (c *Client) ClusterFirewallAliasesRemoveAlias(req ClusterFirewallAliasesRem
 
 	if err != nil {
 		return fmt.Errorf("ClusterFirewallAliasesRemoveAlias: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// ClusterFirewallAliasesReadAlias GET /cluster/firewall/aliases/{name}
+// Read alias.
+//
+func (c *Client) ClusterFirewallAliasesReadAlias(req ClusterFirewallAliasesReadAliasRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterFirewallAliasesReadAlias: %v", err)
+	}
+
+	err = c.Request("GET", fmt.Sprintf("/cluster/firewall/aliases/%v", req.Name), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterFirewallAliasesReadAlias: %v", err)
 	}
 
 	// output
@@ -1044,27 +1044,6 @@ func (c *Client) ClusterBackupCreateJob(req ClusterBackupCreateJobRequest) error
 	return nil
 }
 
-// ClusterBackupDeleteJob DELETE /cluster/backup/{id}
-// Delete vzdump backup job definition.
-//
-func (c *Client) ClusterBackupDeleteJob(req ClusterBackupDeleteJobRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterBackupDeleteJob: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/cluster/backup/%v", req.Id), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterBackupDeleteJob: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterBackupReadJob GET /cluster/backup/{id}
 // Read vzdump backup job definition.
 //
@@ -1106,6 +1085,27 @@ func (c *Client) ClusterBackupUpdateJob(req ClusterBackupUpdateJobRequest) error
 
 	if err != nil {
 		return fmt.Errorf("ClusterBackupUpdateJob: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// ClusterBackupDeleteJob DELETE /cluster/backup/{id}
+// Delete vzdump backup job definition.
+//
+func (c *Client) ClusterBackupDeleteJob(req ClusterBackupDeleteJobRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterBackupDeleteJob: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/cluster/backup/%v", req.Id), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterBackupDeleteJob: %v", err)
 	}
 
 	// output
@@ -1324,6 +1324,27 @@ func (c *Client) ClusterHaGroupsCreate(req ClusterHaGroupsCreateRequest) error {
 	return nil
 }
 
+// ClusterHaGroupsDelete DELETE /cluster/ha/groups/{group}
+// Delete ha group configuration.
+//
+func (c *Client) ClusterHaGroupsDelete(req ClusterHaGroupsDeleteRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterHaGroupsDelete: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/cluster/ha/groups/%v", req.Group), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterHaGroupsDelete: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // ClusterHaGroupsRead GET /cluster/ha/groups/{group}
 // Read ha group configuration.
 //
@@ -1371,27 +1392,6 @@ func (c *Client) ClusterHaGroupsUpdate(req ClusterHaGroupsUpdateRequest) error {
 	return nil
 }
 
-// ClusterHaGroupsDelete DELETE /cluster/ha/groups/{group}
-// Delete ha group configuration.
-//
-func (c *Client) ClusterHaGroupsDelete(req ClusterHaGroupsDeleteRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterHaGroupsDelete: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/cluster/ha/groups/%v", req.Group), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterHaGroupsDelete: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterAcmePluginsAddPlugin POST /cluster/acme/plugins
 // Add ACME plugin configuration.
 //
@@ -1412,27 +1412,6 @@ func (c *Client) ClusterAcmePluginsAddPlugin(req ClusterAcmePluginsAddPluginRequ
 
 	if err != nil {
 		return fmt.Errorf("ClusterAcmePluginsAddPlugin: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// ClusterAcmePluginsDeletePlugin DELETE /cluster/acme/plugins/{id}
-// Delete ACME plugin configuration.
-//
-func (c *Client) ClusterAcmePluginsDeletePlugin(req ClusterAcmePluginsDeletePluginRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterAcmePluginsDeletePlugin: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/cluster/acme/plugins/%v", req.Id), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterAcmePluginsDeletePlugin: %v", err)
 	}
 
 	// output
@@ -1480,6 +1459,27 @@ func (c *Client) ClusterAcmePluginsUpdatePlugin(req ClusterAcmePluginsUpdatePlug
 
 	if err != nil {
 		return fmt.Errorf("ClusterAcmePluginsUpdatePlugin: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// ClusterAcmePluginsDeletePlugin DELETE /cluster/acme/plugins/{id}
+// Delete ACME plugin configuration.
+//
+func (c *Client) ClusterAcmePluginsDeletePlugin(req ClusterAcmePluginsDeletePluginRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterAcmePluginsDeletePlugin: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/cluster/acme/plugins/%v", req.Id), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterAcmePluginsDeletePlugin: %v", err)
 	}
 
 	// output
@@ -1905,27 +1905,6 @@ func (c *Client) ClusterSdnVnetsSubnetsCreate(req ClusterSdnVnetsSubnetsCreateRe
 	return nil
 }
 
-// ClusterSdnVnetsSubnetsDelete DELETE /cluster/sdn/vnets/{vnet}/subnets/{subnet}
-// Delete sdn subnet object configuration.
-//
-func (c *Client) ClusterSdnVnetsSubnetsDelete(req ClusterSdnVnetsSubnetsDeleteRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterSdnVnetsSubnetsDelete: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/cluster/sdn/vnets/%v/subnets/%v", req.Vnet, req.Subnet), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterSdnVnetsSubnetsDelete: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterSdnVnetsSubnetsRead GET /cluster/sdn/vnets/{vnet}/subnets/{subnet}
 // Read sdn subnet configuration.
 //
@@ -1967,6 +1946,27 @@ func (c *Client) ClusterSdnVnetsSubnetsUpdate(req ClusterSdnVnetsSubnetsUpdateRe
 
 	if err != nil {
 		return fmt.Errorf("ClusterSdnVnetsSubnetsUpdate: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// ClusterSdnVnetsSubnetsDelete DELETE /cluster/sdn/vnets/{vnet}/subnets/{subnet}
+// Delete sdn subnet object configuration.
+//
+func (c *Client) ClusterSdnVnetsSubnetsDelete(req ClusterSdnVnetsSubnetsDeleteRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterSdnVnetsSubnetsDelete: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/cluster/sdn/vnets/%v/subnets/%v", req.Vnet, req.Subnet), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterSdnVnetsSubnetsDelete: %v", err)
 	}
 
 	// output
@@ -2093,32 +2093,6 @@ func (c *Client) ClusterSdnControllersCreate(req ClusterSdnControllersCreateRequ
 	return nil
 }
 
-// ClusterSdnControllersUpdate PUT /cluster/sdn/controllers/{controller}
-// Update sdn controller object configuration.
-//
-func (c *Client) ClusterSdnControllersUpdate(req ClusterSdnControllersUpdateRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterSdnControllersUpdate: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("ClusterSdnControllersUpdate: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/cluster/sdn/controllers/%v", req.Controller), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterSdnControllersUpdate: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterSdnControllersDelete DELETE /cluster/sdn/controllers/{controller}
 // Delete sdn controller object configuration.
 //
@@ -2161,6 +2135,32 @@ func (c *Client) ClusterSdnControllersRead(req ClusterSdnControllersReadRequest)
 	return nil
 }
 
+// ClusterSdnControllersUpdate PUT /cluster/sdn/controllers/{controller}
+// Update sdn controller object configuration.
+//
+func (c *Client) ClusterSdnControllersUpdate(req ClusterSdnControllersUpdateRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterSdnControllersUpdate: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("ClusterSdnControllersUpdate: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/cluster/sdn/controllers/%v", req.Controller), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterSdnControllersUpdate: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // ClusterSdnIpamsCreate POST /cluster/sdn/ipams
 // Create a new sdn ipam object.
 //
@@ -2181,6 +2181,32 @@ func (c *Client) ClusterSdnIpamsCreate(req ClusterSdnIpamsCreateRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("ClusterSdnIpamsCreate: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// ClusterSdnIpamsUpdate PUT /cluster/sdn/ipams/{ipam}
+// Update sdn ipam object configuration.
+//
+func (c *Client) ClusterSdnIpamsUpdate(req ClusterSdnIpamsUpdateRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterSdnIpamsUpdate: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("ClusterSdnIpamsUpdate: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/cluster/sdn/ipams/%v", req.Ipam), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterSdnIpamsUpdate: %v", err)
 	}
 
 	// output
@@ -2229,32 +2255,6 @@ func (c *Client) ClusterSdnIpamsRead(req ClusterSdnIpamsReadRequest) error {
 	return nil
 }
 
-// ClusterSdnIpamsUpdate PUT /cluster/sdn/ipams/{ipam}
-// Update sdn ipam object configuration.
-//
-func (c *Client) ClusterSdnIpamsUpdate(req ClusterSdnIpamsUpdateRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterSdnIpamsUpdate: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("ClusterSdnIpamsUpdate: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/cluster/sdn/ipams/%v", req.Ipam), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterSdnIpamsUpdate: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // ClusterSdnDnsCreate POST /cluster/sdn/dns
 // Create a new sdn dns object.
 //
@@ -2275,32 +2275,6 @@ func (c *Client) ClusterSdnDnsCreate(req ClusterSdnDnsCreateRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("ClusterSdnDnsCreate: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// ClusterSdnDnsUpdate PUT /cluster/sdn/dns/{dns}
-// Update sdn dns object configuration.
-//
-func (c *Client) ClusterSdnDnsUpdate(req ClusterSdnDnsUpdateRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("ClusterSdnDnsUpdate: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("ClusterSdnDnsUpdate: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/cluster/sdn/dns/%v", req.Dns), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("ClusterSdnDnsUpdate: %v", err)
 	}
 
 	// output
@@ -2343,6 +2317,32 @@ func (c *Client) ClusterSdnDnsRead(req ClusterSdnDnsReadRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("ClusterSdnDnsRead: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// ClusterSdnDnsUpdate PUT /cluster/sdn/dns/{dns}
+// Update sdn dns object configuration.
+//
+func (c *Client) ClusterSdnDnsUpdate(req ClusterSdnDnsUpdateRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("ClusterSdnDnsUpdate: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("ClusterSdnDnsUpdate: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/cluster/sdn/dns/%v", req.Dns), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("ClusterSdnDnsUpdate: %v", err)
 	}
 
 	// output
@@ -2521,27 +2521,6 @@ func (c *Client) NodesQemuCreateVm(req NodesQemuCreateVmRequest) error {
 	return nil
 }
 
-// NodesQemuDestroyVm DELETE /nodes/{node}/qemu/{vmid}
-// Destroy the VM and  all used/owned volumes. Removes any VM specific permissions and firewall rules
-//
-func (c *Client) NodesQemuDestroyVm(req NodesQemuDestroyVmRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesQemuDestroyVm: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/qemu/%v", req.Node, req.Vmid), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesQemuDestroyVm: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // NodesQemuVmdiridx GET /nodes/{node}/qemu/{vmid}
 // Directory index
 //
@@ -2562,6 +2541,27 @@ func (c *Client) NodesQemuVmdiridx(req NodesQemuVmdiridxRequest) ([]*NodesQemuVm
 
 	// output
 	return res, nil
+}
+
+// NodesQemuDestroyVm DELETE /nodes/{node}/qemu/{vmid}
+// Destroy the VM and  all used/owned volumes. Removes any VM specific permissions and firewall rules
+//
+func (c *Client) NodesQemuDestroyVm(req NodesQemuDestroyVmRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesQemuDestroyVm: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/qemu/%v", req.Node, req.Vmid), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesQemuDestroyVm: %v", err)
+	}
+
+	// output
+	return nil
 }
 
 // NodesQemuFirewallRulesGet GET /nodes/{node}/qemu/{vmid}/firewall/rules
@@ -2681,32 +2681,6 @@ func (c *Client) NodesQemuFirewallRulesUpdateRule(req NodesQemuFirewallRulesUpda
 	return nil
 }
 
-// NodesQemuFirewallAliasesCreateAlias POST /nodes/{node}/qemu/{vmid}/firewall/aliases
-// Create IP or Network Alias.
-//
-func (c *Client) NodesQemuFirewallAliasesCreateAlias(req NodesQemuFirewallAliasesCreateAliasRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesQemuFirewallAliasesCreateAlias: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("NodesQemuFirewallAliasesCreateAlias: %v", err)
-	}
-
-	err = c.Request("POST", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/aliases", req.Node, req.Vmid), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesQemuFirewallAliasesCreateAlias: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // NodesQemuFirewallAliasesGet GET /nodes/{node}/qemu/{vmid}/firewall/aliases
 // List aliases
 //
@@ -2729,21 +2703,26 @@ func (c *Client) NodesQemuFirewallAliasesGet(req NodesQemuFirewallAliasesGetRequ
 	return res, nil
 }
 
-// NodesQemuFirewallAliasesReadAlias GET /nodes/{node}/qemu/{vmid}/firewall/aliases/{name}
-// Read alias.
+// NodesQemuFirewallAliasesCreateAlias POST /nodes/{node}/qemu/{vmid}/firewall/aliases
+// Create IP or Network Alias.
 //
-func (c *Client) NodesQemuFirewallAliasesReadAlias(req NodesQemuFirewallAliasesReadAliasRequest) error {
+func (c *Client) NodesQemuFirewallAliasesCreateAlias(req NodesQemuFirewallAliasesCreateAliasRequest) error {
 	var err error
 
 	if err = c.validate(req); err != nil {
 		// values not valid, deal with errors here
-		return fmt.Errorf("NodesQemuFirewallAliasesReadAlias: %v", err)
+		return fmt.Errorf("NodesQemuFirewallAliasesCreateAlias: %v", err)
 	}
 
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/aliases/%v", req.Node, req.Vmid, req.Name), nil, nil)
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("NodesQemuFirewallAliasesCreateAlias: %v", err)
+	}
+
+	err = c.Request("POST", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/aliases", req.Node, req.Vmid), strings.NewReader(c.replaceBool(input.Encode())), nil)
 
 	if err != nil {
-		return fmt.Errorf("NodesQemuFirewallAliasesReadAlias: %v", err)
+		return fmt.Errorf("NodesQemuFirewallAliasesCreateAlias: %v", err)
 	}
 
 	// output
@@ -2797,26 +2776,21 @@ func (c *Client) NodesQemuFirewallAliasesRemoveAlias(req NodesQemuFirewallAliase
 	return nil
 }
 
-// NodesQemuFirewallIpsetCreate POST /nodes/{node}/qemu/{vmid}/firewall/ipset
-// Create new IPSet
+// NodesQemuFirewallAliasesReadAlias GET /nodes/{node}/qemu/{vmid}/firewall/aliases/{name}
+// Read alias.
 //
-func (c *Client) NodesQemuFirewallIpsetCreate(req NodesQemuFirewallIpsetCreateRequest) error {
+func (c *Client) NodesQemuFirewallAliasesReadAlias(req NodesQemuFirewallAliasesReadAliasRequest) error {
 	var err error
 
 	if err = c.validate(req); err != nil {
 		// values not valid, deal with errors here
-		return fmt.Errorf("NodesQemuFirewallIpsetCreate: %v", err)
+		return fmt.Errorf("NodesQemuFirewallAliasesReadAlias: %v", err)
 	}
 
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("NodesQemuFirewallIpsetCreate: %v", err)
-	}
-
-	err = c.Request("POST", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/ipset", req.Node, req.Vmid), strings.NewReader(c.replaceBool(input.Encode())), nil)
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/aliases/%v", req.Node, req.Vmid, req.Name), nil, nil)
 
 	if err != nil {
-		return fmt.Errorf("NodesQemuFirewallIpsetCreate: %v", err)
+		return fmt.Errorf("NodesQemuFirewallAliasesReadAlias: %v", err)
 	}
 
 	// output
@@ -2843,6 +2817,32 @@ func (c *Client) NodesQemuFirewallIpsetIndex(req NodesQemuFirewallIpsetIndexRequ
 
 	// output
 	return res, nil
+}
+
+// NodesQemuFirewallIpsetCreate POST /nodes/{node}/qemu/{vmid}/firewall/ipset
+// Create new IPSet
+//
+func (c *Client) NodesQemuFirewallIpsetCreate(req NodesQemuFirewallIpsetCreateRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesQemuFirewallIpsetCreate: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("NodesQemuFirewallIpsetCreate: %v", err)
+	}
+
+	err = c.Request("POST", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/ipset", req.Node, req.Vmid), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesQemuFirewallIpsetCreate: %v", err)
+	}
+
+	// output
+	return nil
 }
 
 // NodesQemuFirewallIpsetDelete DELETE /nodes/{node}/qemu/{vmid}/firewall/ipset/{name}
@@ -2914,27 +2914,6 @@ func (c *Client) NodesQemuFirewallIpsetCreateIp(req NodesQemuFirewallIpsetCreate
 	return nil
 }
 
-// NodesQemuFirewallIpsetReadIp GET /nodes/{node}/qemu/{vmid}/firewall/ipset/{name}/{cidr}
-// Read IP or Network settings from IPSet.
-//
-func (c *Client) NodesQemuFirewallIpsetReadIp(req NodesQemuFirewallIpsetReadIpRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesQemuFirewallIpsetReadIp: %v", err)
-	}
-
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/ipset/%v/%v", req.Node, req.Vmid, req.Name, req.Cidr), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesQemuFirewallIpsetReadIp: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // NodesQemuFirewallIpsetUpdateIp PUT /nodes/{node}/qemu/{vmid}/firewall/ipset/{name}/{cidr}
 // Update IP or Network settings
 //
@@ -2982,26 +2961,25 @@ func (c *Client) NodesQemuFirewallIpsetRemoveIp(req NodesQemuFirewallIpsetRemove
 	return nil
 }
 
-// NodesQemuFirewallOptionsGet GET /nodes/{node}/qemu/{vmid}/firewall/options
-// Get VM firewall options.
+// NodesQemuFirewallIpsetReadIp GET /nodes/{node}/qemu/{vmid}/firewall/ipset/{name}/{cidr}
+// Read IP or Network settings from IPSet.
 //
-func (c *Client) NodesQemuFirewallOptionsGet(req NodesQemuFirewallOptionsGetRequest) (*NodesQemuFirewallOptionsGetResponse, error) {
+func (c *Client) NodesQemuFirewallIpsetReadIp(req NodesQemuFirewallIpsetReadIpRequest) error {
 	var err error
 
 	if err = c.validate(req); err != nil {
 		// values not valid, deal with errors here
-		return nil, fmt.Errorf("NodesQemuFirewallOptionsGet: %v", err)
+		return fmt.Errorf("NodesQemuFirewallIpsetReadIp: %v", err)
 	}
 
-	var res *NodesQemuFirewallOptionsGetResponse
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/options", req.Node, req.Vmid), nil, &res)
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/ipset/%v/%v", req.Node, req.Vmid, req.Name, req.Cidr), nil, nil)
 
 	if err != nil {
-		return nil, fmt.Errorf("NodesQemuFirewallOptionsGet: %v", err)
+		return fmt.Errorf("NodesQemuFirewallIpsetReadIp: %v", err)
 	}
 
 	// output
-	return res, nil
+	return nil
 }
 
 // NodesQemuFirewallOptionsSet PUT /nodes/{node}/qemu/{vmid}/firewall/options
@@ -3028,6 +3006,28 @@ func (c *Client) NodesQemuFirewallOptionsSet(req NodesQemuFirewallOptionsSetRequ
 
 	// output
 	return nil
+}
+
+// NodesQemuFirewallOptionsGet GET /nodes/{node}/qemu/{vmid}/firewall/options
+// Get VM firewall options.
+//
+func (c *Client) NodesQemuFirewallOptionsGet(req NodesQemuFirewallOptionsGetRequest) (*NodesQemuFirewallOptionsGetResponse, error) {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return nil, fmt.Errorf("NodesQemuFirewallOptionsGet: %v", err)
+	}
+
+	var res *NodesQemuFirewallOptionsGetResponse
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/firewall/options", req.Node, req.Vmid), nil, &res)
+
+	if err != nil {
+		return nil, fmt.Errorf("NodesQemuFirewallOptionsGet: %v", err)
+	}
+
+	// output
+	return res, nil
 }
 
 // NodesQemuFirewallLog GET /nodes/{node}/qemu/{vmid}/firewall/log
@@ -4282,6 +4282,28 @@ func (c *Client) NodesQemuMoveDiskMoveVmDisk(req NodesQemuMoveDiskMoveVmDiskRequ
 	return nil
 }
 
+// NodesQemuMigrateVmPrecondition GET /nodes/{node}/qemu/{vmid}/migrate
+// Get preconditions for migration.
+//
+func (c *Client) NodesQemuMigrateVmPrecondition(req NodesQemuMigrateVmPreconditionRequest) (*NodesQemuMigrateVmPreconditionResponse, error) {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return nil, fmt.Errorf("NodesQemuMigrateVmPrecondition: %v", err)
+	}
+
+	var res *NodesQemuMigrateVmPreconditionResponse
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/migrate", req.Node, req.Vmid), nil, &res)
+
+	if err != nil {
+		return nil, fmt.Errorf("NodesQemuMigrateVmPrecondition: %v", err)
+	}
+
+	// output
+	return res, nil
+}
+
 // NodesQemuMigrateVm POST /nodes/{node}/qemu/{vmid}/migrate
 // Migrate virtual machine. Creates a new migration task.
 //
@@ -4306,28 +4328,6 @@ func (c *Client) NodesQemuMigrateVm(req NodesQemuMigrateVmRequest) error {
 
 	// output
 	return nil
-}
-
-// NodesQemuMigrateVmPrecondition GET /nodes/{node}/qemu/{vmid}/migrate
-// Get preconditions for migration.
-//
-func (c *Client) NodesQemuMigrateVmPrecondition(req NodesQemuMigrateVmPreconditionRequest) (*NodesQemuMigrateVmPreconditionResponse, error) {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return nil, fmt.Errorf("NodesQemuMigrateVmPrecondition: %v", err)
-	}
-
-	var res *NodesQemuMigrateVmPreconditionResponse
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/migrate", req.Node, req.Vmid), nil, &res)
-
-	if err != nil {
-		return nil, fmt.Errorf("NodesQemuMigrateVmPrecondition: %v", err)
-	}
-
-	// output
-	return res, nil
 }
 
 // NodesQemuMonitor POST /nodes/{node}/qemu/{vmid}/monitor
@@ -4382,6 +4382,28 @@ func (c *Client) NodesQemuResizeVm(req NodesQemuResizeVmRequest) error {
 	return nil
 }
 
+// NodesQemuSnapshotList GET /nodes/{node}/qemu/{vmid}/snapshot
+// List all snapshots.
+//
+func (c *Client) NodesQemuSnapshotList(req NodesQemuSnapshotListRequest) ([]*NodesQemuSnapshotListResponse, error) {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return nil, fmt.Errorf("NodesQemuSnapshotList: %v", err)
+	}
+
+	var res []*NodesQemuSnapshotListResponse
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/snapshot", req.Node, req.Vmid), nil, &res)
+
+	if err != nil {
+		return nil, fmt.Errorf("NodesQemuSnapshotList: %v", err)
+	}
+
+	// output
+	return res, nil
+}
+
 // NodesQemuSnapshot POST /nodes/{node}/qemu/{vmid}/snapshot
 // Snapshot a VM.
 //
@@ -4406,28 +4428,6 @@ func (c *Client) NodesQemuSnapshot(req NodesQemuSnapshotRequest) error {
 
 	// output
 	return nil
-}
-
-// NodesQemuSnapshotList GET /nodes/{node}/qemu/{vmid}/snapshot
-// List all snapshots.
-//
-func (c *Client) NodesQemuSnapshotList(req NodesQemuSnapshotListRequest) ([]*NodesQemuSnapshotListResponse, error) {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return nil, fmt.Errorf("NodesQemuSnapshotList: %v", err)
-	}
-
-	var res []*NodesQemuSnapshotListResponse
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/qemu/%v/snapshot", req.Node, req.Vmid), nil, &res)
-
-	if err != nil {
-		return nil, fmt.Errorf("NodesQemuSnapshotList: %v", err)
-	}
-
-	// output
-	return res, nil
 }
 
 // NodesQemuSnapshotDelsnapshot DELETE /nodes/{node}/qemu/{vmid}/snapshot/{snapname}
@@ -4640,27 +4640,6 @@ func (c *Client) NodesLxcCreateVm(req NodesLxcCreateVmRequest) error {
 	return nil
 }
 
-// NodesLxcDestroyVm DELETE /nodes/{node}/lxc/{vmid}
-// Destroy the container (also delete all uses files).
-//
-func (c *Client) NodesLxcDestroyVm(req NodesLxcDestroyVmRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesLxcDestroyVm: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/lxc/%v", req.Node, req.Vmid), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesLxcDestroyVm: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // NodesLxcVmdiridx GET /nodes/{node}/lxc/{vmid}
 // Directory index
 //
@@ -4681,6 +4660,27 @@ func (c *Client) NodesLxcVmdiridx(req NodesLxcVmdiridxRequest) ([]*NodesLxcVmdir
 
 	// output
 	return res, nil
+}
+
+// NodesLxcDestroyVm DELETE /nodes/{node}/lxc/{vmid}
+// Destroy the container (also delete all uses files).
+//
+func (c *Client) NodesLxcDestroyVm(req NodesLxcDestroyVmRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesLxcDestroyVm: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/lxc/%v", req.Node, req.Vmid), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesLxcDestroyVm: %v", err)
+	}
+
+	// output
+	return nil
 }
 
 // NodesLxcConfigVm GET /nodes/{node}/lxc/{vmid}/config
@@ -4931,6 +4931,28 @@ func (c *Client) NodesLxcStatusRebootVm(req NodesLxcStatusRebootVmRequest) error
 	return nil
 }
 
+// NodesLxcSnapshotList GET /nodes/{node}/lxc/{vmid}/snapshot
+// List all snapshots.
+//
+func (c *Client) NodesLxcSnapshotList(req NodesLxcSnapshotListRequest) ([]*NodesLxcSnapshotListResponse, error) {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return nil, fmt.Errorf("NodesLxcSnapshotList: %v", err)
+	}
+
+	var res []*NodesLxcSnapshotListResponse
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/lxc/%v/snapshot", req.Node, req.Vmid), nil, &res)
+
+	if err != nil {
+		return nil, fmt.Errorf("NodesLxcSnapshotList: %v", err)
+	}
+
+	// output
+	return res, nil
+}
+
 // NodesLxcSnapshot POST /nodes/{node}/lxc/{vmid}/snapshot
 // Snapshot a container.
 //
@@ -4957,26 +4979,25 @@ func (c *Client) NodesLxcSnapshot(req NodesLxcSnapshotRequest) error {
 	return nil
 }
 
-// NodesLxcSnapshotList GET /nodes/{node}/lxc/{vmid}/snapshot
-// List all snapshots.
+// NodesLxcSnapshotCmdIdx GET /nodes/{node}/lxc/{vmid}/snapshot/{snapname}
 //
-func (c *Client) NodesLxcSnapshotList(req NodesLxcSnapshotListRequest) ([]*NodesLxcSnapshotListResponse, error) {
+//
+func (c *Client) NodesLxcSnapshotCmdIdx(req NodesLxcSnapshotCmdIdxRequest) error {
 	var err error
 
 	if err = c.validate(req); err != nil {
 		// values not valid, deal with errors here
-		return nil, fmt.Errorf("NodesLxcSnapshotList: %v", err)
+		return fmt.Errorf("NodesLxcSnapshotCmdIdx: %v", err)
 	}
 
-	var res []*NodesLxcSnapshotListResponse
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/lxc/%v/snapshot", req.Node, req.Vmid), nil, &res)
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/lxc/%v/snapshot/%v", req.Node, req.Vmid, req.Snapname), nil, nil)
 
 	if err != nil {
-		return nil, fmt.Errorf("NodesLxcSnapshotList: %v", err)
+		return fmt.Errorf("NodesLxcSnapshotCmdIdx: %v", err)
 	}
 
 	// output
-	return res, nil
+	return nil
 }
 
 // NodesLxcSnapshotDelsnapshot DELETE /nodes/{node}/lxc/{vmid}/snapshot/{snapname}
@@ -4994,27 +5015,6 @@ func (c *Client) NodesLxcSnapshotDelsnapshot(req NodesLxcSnapshotDelsnapshotRequ
 
 	if err != nil {
 		return fmt.Errorf("NodesLxcSnapshotDelsnapshot: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesLxcSnapshotCmdIdx GET /nodes/{node}/lxc/{vmid}/snapshot/{snapname}
-//
-//
-func (c *Client) NodesLxcSnapshotCmdIdx(req NodesLxcSnapshotCmdIdxRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesLxcSnapshotCmdIdx: %v", err)
-	}
-
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/lxc/%v/snapshot/%v", req.Node, req.Vmid, req.Snapname), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesLxcSnapshotCmdIdx: %v", err)
 	}
 
 	// output
@@ -5047,6 +5047,27 @@ func (c *Client) NodesLxcSnapshotRollback(req NodesLxcSnapshotRollbackRequest) e
 	return nil
 }
 
+// NodesLxcSnapshotConfigGetSnapshot GET /nodes/{node}/lxc/{vmid}/snapshot/{snapname}/config
+// Get snapshot configuration
+//
+func (c *Client) NodesLxcSnapshotConfigGetSnapshot(req NodesLxcSnapshotConfigGetSnapshotRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesLxcSnapshotConfigGetSnapshot: %v", err)
+	}
+
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/lxc/%v/snapshot/%v/config", req.Node, req.Vmid, req.Snapname), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesLxcSnapshotConfigGetSnapshot: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // NodesLxcSnapshotConfigUpdateSnapshot PUT /nodes/{node}/lxc/{vmid}/snapshot/{snapname}/config
 // Update snapshot metadata.
 //
@@ -5067,27 +5088,6 @@ func (c *Client) NodesLxcSnapshotConfigUpdateSnapshot(req NodesLxcSnapshotConfig
 
 	if err != nil {
 		return fmt.Errorf("NodesLxcSnapshotConfigUpdateSnapshot: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesLxcSnapshotConfigGetSnapshot GET /nodes/{node}/lxc/{vmid}/snapshot/{snapname}/config
-// Get snapshot configuration
-//
-func (c *Client) NodesLxcSnapshotConfigGetSnapshot(req NodesLxcSnapshotConfigGetSnapshotRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesLxcSnapshotConfigGetSnapshot: %v", err)
-	}
-
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/lxc/%v/snapshot/%v/config", req.Node, req.Vmid, req.Snapname), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesLxcSnapshotConfigGetSnapshot: %v", err)
 	}
 
 	// output
@@ -5444,6 +5444,32 @@ func (c *Client) NodesLxcFirewallIpsetCreateIp(req NodesLxcFirewallIpsetCreateIp
 	return nil
 }
 
+// NodesLxcFirewallIpsetUpdateIp PUT /nodes/{node}/lxc/{vmid}/firewall/ipset/{name}/{cidr}
+// Update IP or Network settings
+//
+func (c *Client) NodesLxcFirewallIpsetUpdateIp(req NodesLxcFirewallIpsetUpdateIpRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesLxcFirewallIpsetUpdateIp: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("NodesLxcFirewallIpsetUpdateIp: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/nodes/%v/lxc/%v/firewall/ipset/%v/%v", req.Node, req.Vmid, req.Name, req.Cidr), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesLxcFirewallIpsetUpdateIp: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // NodesLxcFirewallIpsetRemoveIp DELETE /nodes/{node}/lxc/{vmid}/firewall/ipset/{name}/{cidr}
 // Remove IP or Network from IPSet.
 //
@@ -5480,32 +5506,6 @@ func (c *Client) NodesLxcFirewallIpsetReadIp(req NodesLxcFirewallIpsetReadIpRequ
 
 	if err != nil {
 		return fmt.Errorf("NodesLxcFirewallIpsetReadIp: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesLxcFirewallIpsetUpdateIp PUT /nodes/{node}/lxc/{vmid}/firewall/ipset/{name}/{cidr}
-// Update IP or Network settings
-//
-func (c *Client) NodesLxcFirewallIpsetUpdateIp(req NodesLxcFirewallIpsetUpdateIpRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesLxcFirewallIpsetUpdateIp: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("NodesLxcFirewallIpsetUpdateIp: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/nodes/%v/lxc/%v/firewall/ipset/%v/%v", req.Node, req.Vmid, req.Name, req.Cidr), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesLxcFirewallIpsetUpdateIp: %v", err)
 	}
 
 	// output
@@ -6096,6 +6096,27 @@ func (c *Client) NodesCephMdsCreatemds(req NodesCephMdsCreatemdsRequest) error {
 	return nil
 }
 
+// NodesCephMgrDestroymgr DELETE /nodes/{node}/ceph/mgr/{id}
+// Destroy Ceph Manager.
+//
+func (c *Client) NodesCephMgrDestroymgr(req NodesCephMgrDestroymgrRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesCephMgrDestroymgr: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/ceph/mgr/%v", req.Node, req.Id), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesCephMgrDestroymgr: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // NodesCephMgrCreatemgr POST /nodes/{node}/ceph/mgr/{id}
 // Create Ceph Manager
 //
@@ -6116,27 +6137,6 @@ func (c *Client) NodesCephMgrCreatemgr(req NodesCephMgrCreatemgrRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("NodesCephMgrCreatemgr: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesCephMgrDestroymgr DELETE /nodes/{node}/ceph/mgr/{id}
-// Destroy Ceph Manager.
-//
-func (c *Client) NodesCephMgrDestroymgr(req NodesCephMgrDestroymgrRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesCephMgrDestroymgr: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/ceph/mgr/%v", req.Node, req.Id), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesCephMgrDestroymgr: %v", err)
 	}
 
 	// output
@@ -6803,48 +6803,6 @@ func (c *Client) NodesServicesReloadService(req NodesServicesReloadServiceReques
 	return nil
 }
 
-// NodesSubscriptionDelete DELETE /nodes/{node}/subscription
-// Delete subscription key of this node.
-//
-func (c *Client) NodesSubscriptionDelete(req NodesSubscriptionDeleteRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesSubscriptionDelete: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/subscription", req.Node), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesSubscriptionDelete: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesSubscriptionGet GET /nodes/{node}/subscription
-// Read subscription info.
-//
-func (c *Client) NodesSubscriptionGet(req NodesSubscriptionGetRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesSubscriptionGet: %v", err)
-	}
-
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/subscription", req.Node), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesSubscriptionGet: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // NodesSubscriptionUpdate POST /nodes/{node}/subscription
 // Update subscription info.
 //
@@ -6891,6 +6849,69 @@ func (c *Client) NodesSubscriptionSet(req NodesSubscriptionSetRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("NodesSubscriptionSet: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// NodesSubscriptionDelete DELETE /nodes/{node}/subscription
+// Delete subscription key of this node.
+//
+func (c *Client) NodesSubscriptionDelete(req NodesSubscriptionDeleteRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesSubscriptionDelete: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/subscription", req.Node), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesSubscriptionDelete: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// NodesSubscriptionGet GET /nodes/{node}/subscription
+// Read subscription info.
+//
+func (c *Client) NodesSubscriptionGet(req NodesSubscriptionGetRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesSubscriptionGet: %v", err)
+	}
+
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/subscription", req.Node), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesSubscriptionGet: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// NodesNetworkRevertChanges DELETE /nodes/{node}/network
+// Revert network configuration changes.
+//
+func (c *Client) NodesNetworkRevertChanges(req NodesNetworkRevertChangesRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesNetworkRevertChanges: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/network", req.Node), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesNetworkRevertChanges: %v", err)
 	}
 
 	// output
@@ -6949,21 +6970,21 @@ func (c *Client) NodesNetworkReloadConfig(req NodesNetworkReloadConfigRequest) e
 	return nil
 }
 
-// NodesNetworkRevertChanges DELETE /nodes/{node}/network
-// Revert network configuration changes.
+// NodesNetworkDelete DELETE /nodes/{node}/network/{iface}
+// Delete network device configuration
 //
-func (c *Client) NodesNetworkRevertChanges(req NodesNetworkRevertChangesRequest) error {
+func (c *Client) NodesNetworkDelete(req NodesNetworkDeleteRequest) error {
 	var err error
 
 	if err = c.validate(req); err != nil {
 		// values not valid, deal with errors here
-		return fmt.Errorf("NodesNetworkRevertChanges: %v", err)
+		return fmt.Errorf("NodesNetworkDelete: %v", err)
 	}
 
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/network", req.Node), nil, nil)
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/network/%v", req.Node, req.Iface), nil, nil)
 
 	if err != nil {
-		return fmt.Errorf("NodesNetworkRevertChanges: %v", err)
+		return fmt.Errorf("NodesNetworkDelete: %v", err)
 	}
 
 	// output
@@ -7012,27 +7033,6 @@ func (c *Client) NodesNetworkUpdate(req NodesNetworkUpdateRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("NodesNetworkUpdate: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesNetworkDelete DELETE /nodes/{node}/network/{iface}
-// Delete network device configuration
-//
-func (c *Client) NodesNetworkDelete(req NodesNetworkDeleteRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesNetworkDelete: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/network/%v", req.Node, req.Iface), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesNetworkDelete: %v", err)
 	}
 
 	// output
@@ -7966,27 +7966,6 @@ func (c *Client) NodesDisksZfsCreate(req NodesDisksZfsCreateRequest) error {
 	return nil
 }
 
-// NodesDisksZfsDelete DELETE /nodes/{node}/disks/zfs/{name}
-// Destroy a ZFS pool.
-//
-func (c *Client) NodesDisksZfsDelete(req NodesDisksZfsDeleteRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesDisksZfsDelete: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/disks/zfs/%v", req.Node, req.Name), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesDisksZfsDelete: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // NodesDisksZfsDetail GET /nodes/{node}/disks/zfs/{name}
 // Get details about a zpool.
 //
@@ -8007,6 +7986,27 @@ func (c *Client) NodesDisksZfsDetail(req NodesDisksZfsDetailRequest) (*NodesDisk
 
 	// output
 	return res, nil
+}
+
+// NodesDisksZfsDelete DELETE /nodes/{node}/disks/zfs/{name}
+// Destroy a ZFS pool.
+//
+func (c *Client) NodesDisksZfsDelete(req NodesDisksZfsDeleteRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesDisksZfsDelete: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/disks/zfs/%v", req.Node, req.Name), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesDisksZfsDelete: %v", err)
+	}
+
+	// output
+	return nil
 }
 
 // NodesDisksList GET /nodes/{node}/disks/list
@@ -8105,6 +8105,27 @@ func (c *Client) NodesDisksWipediskWipeDisk(req NodesDisksWipediskWipeDiskReques
 	return nil
 }
 
+// NodesAptUpdateLists GET /nodes/{node}/apt/update
+// List available updates.
+//
+func (c *Client) NodesAptUpdateLists(req NodesAptUpdateListsRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesAptUpdateLists: %v", err)
+	}
+
+	err = c.Request("GET", fmt.Sprintf("/nodes/%v/apt/update", req.Node), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesAptUpdateLists: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // NodesAptUpdateDatabase POST /nodes/{node}/apt/update
 // This is used to resynchronize the package index files from their sources (apt-get update).
 //
@@ -8131,27 +8152,6 @@ func (c *Client) NodesAptUpdateDatabase(req NodesAptUpdateDatabaseRequest) error
 	return nil
 }
 
-// NodesAptUpdateLists GET /nodes/{node}/apt/update
-// List available updates.
-//
-func (c *Client) NodesAptUpdateLists(req NodesAptUpdateListsRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesAptUpdateLists: %v", err)
-	}
-
-	err = c.Request("GET", fmt.Sprintf("/nodes/%v/apt/update", req.Node), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesAptUpdateLists: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // NodesAptChangelog GET /nodes/{node}/apt/changelog
 // Get package changelogs.
 //
@@ -8167,32 +8167,6 @@ func (c *Client) NodesAptChangelog(req NodesAptChangelogRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("NodesAptChangelog: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesAptRepositoriesAddRepository PUT /nodes/{node}/apt/repositories
-// Add a standard repository to the configuration
-//
-func (c *Client) NodesAptRepositoriesAddRepository(req NodesAptRepositoriesAddRepositoryRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesAptRepositoriesAddRepository: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("NodesAptRepositoriesAddRepository: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/nodes/%v/apt/repositories", req.Node), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesAptRepositoriesAddRepository: %v", err)
 	}
 
 	// output
@@ -8241,6 +8215,32 @@ func (c *Client) NodesAptRepositoriesChangeRepository(req NodesAptRepositoriesCh
 
 	if err != nil {
 		return fmt.Errorf("NodesAptRepositoriesChangeRepository: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// NodesAptRepositoriesAddRepository PUT /nodes/{node}/apt/repositories
+// Add a standard repository to the configuration
+//
+func (c *Client) NodesAptRepositoriesAddRepository(req NodesAptRepositoriesAddRepositoryRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesAptRepositoriesAddRepository: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("NodesAptRepositoriesAddRepository: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/nodes/%v/apt/repositories", req.Node), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesAptRepositoriesAddRepository: %v", err)
 	}
 
 	// output
@@ -8546,6 +8546,27 @@ func (c *Client) NodesReplicationScheduleNow(req NodesReplicationScheduleNowRequ
 	return nil
 }
 
+// NodesCertificatesAcmeCertificateRevoke DELETE /nodes/{node}/certificates/acme/certificate
+// Revoke existing certificate from CA.
+//
+func (c *Client) NodesCertificatesAcmeCertificateRevoke(req NodesCertificatesAcmeCertificateRevokeRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("NodesCertificatesAcmeCertificateRevoke: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/certificates/acme/certificate", req.Node), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("NodesCertificatesAcmeCertificateRevoke: %v", err)
+	}
+
+	// output
+	return nil
+}
+
 // NodesCertificatesAcmeCertificateNew POST /nodes/{node}/certificates/acme/certificate
 // Order a new certificate from ACME-compatible CA.
 //
@@ -8592,27 +8613,6 @@ func (c *Client) NodesCertificatesAcmeCertificateRenew(req NodesCertificatesAcme
 
 	if err != nil {
 		return fmt.Errorf("NodesCertificatesAcmeCertificateRenew: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// NodesCertificatesAcmeCertificateRevoke DELETE /nodes/{node}/certificates/acme/certificate
-// Revoke existing certificate from CA.
-//
-func (c *Client) NodesCertificatesAcmeCertificateRevoke(req NodesCertificatesAcmeCertificateRevokeRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("NodesCertificatesAcmeCertificateRevoke: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/nodes/%v/certificates/acme/certificate", req.Node), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("NodesCertificatesAcmeCertificateRevoke: %v", err)
 	}
 
 	// output
@@ -9545,27 +9545,6 @@ func (c *Client) AccessUsersCreateUser(req AccessUsersCreateUserRequest) error {
 	return nil
 }
 
-// AccessUsersDeleteUser DELETE /access/users/{userid}
-// Delete user.
-//
-func (c *Client) AccessUsersDeleteUser(req AccessUsersDeleteUserRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("AccessUsersDeleteUser: %v", err)
-	}
-
-	err = c.Request("DELETE", fmt.Sprintf("/access/users/%v", req.Userid), nil, nil)
-
-	if err != nil {
-		return fmt.Errorf("AccessUsersDeleteUser: %v", err)
-	}
-
-	// output
-	return nil
-}
-
 // AccessUsersReadUser GET /access/users/{userid}
 // Get user configuration.
 //
@@ -9608,6 +9587,27 @@ func (c *Client) AccessUsersUpdateUser(req AccessUsersUpdateUserRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("AccessUsersUpdateUser: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// AccessUsersDeleteUser DELETE /access/users/{userid}
+// Delete user.
+//
+func (c *Client) AccessUsersDeleteUser(req AccessUsersDeleteUserRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("AccessUsersDeleteUser: %v", err)
+	}
+
+	err = c.Request("DELETE", fmt.Sprintf("/access/users/%v", req.Userid), nil, nil)
+
+	if err != nil {
+		return fmt.Errorf("AccessUsersDeleteUser: %v", err)
 	}
 
 	// output
@@ -9876,28 +9876,6 @@ func (c *Client) AccessRolesCreateRole(req AccessRolesCreateRoleRequest) error {
 	return nil
 }
 
-// AccessRolesReadRole GET /access/roles/{roleid}
-// Get role configuration.
-//
-func (c *Client) AccessRolesReadRole(req AccessRolesReadRoleRequest) (*AccessRolesReadRoleResponse, error) {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return nil, fmt.Errorf("AccessRolesReadRole: %v", err)
-	}
-
-	var res *AccessRolesReadRoleResponse
-	err = c.Request("GET", fmt.Sprintf("/access/roles/%v", req.Roleid), nil, &res)
-
-	if err != nil {
-		return nil, fmt.Errorf("AccessRolesReadRole: %v", err)
-	}
-
-	// output
-	return res, nil
-}
-
 // AccessRolesUpdateRole PUT /access/roles/{roleid}
 // Update an existing role.
 //
@@ -9945,17 +9923,22 @@ func (c *Client) AccessRolesDeleteRole(req AccessRolesDeleteRoleRequest) error {
 	return nil
 }
 
-// AccessAclRead GET /access/acl
-// Get Access Control List (ACLs).
+// AccessRolesReadRole GET /access/roles/{roleid}
+// Get role configuration.
 //
-func (c *Client) AccessAclRead() ([]*AccessAclReadResponse, error) {
+func (c *Client) AccessRolesReadRole(req AccessRolesReadRoleRequest) (*AccessRolesReadRoleResponse, error) {
 	var err error
 
-	var res []*AccessAclReadResponse
-	err = c.Request("GET", "/access/acl", nil, &res)
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return nil, fmt.Errorf("AccessRolesReadRole: %v", err)
+	}
+
+	var res *AccessRolesReadRoleResponse
+	err = c.Request("GET", fmt.Sprintf("/access/roles/%v", req.Roleid), nil, &res)
 
 	if err != nil {
-		return nil, fmt.Errorf("AccessAclRead: %v", err)
+		return nil, fmt.Errorf("AccessRolesReadRole: %v", err)
 	}
 
 	// output
@@ -9988,6 +9971,23 @@ func (c *Client) AccessAclUpdate(req AccessAclUpdateRequest) error {
 	return nil
 }
 
+// AccessAclRead GET /access/acl
+// Get Access Control List (ACLs).
+//
+func (c *Client) AccessAclRead() ([]*AccessAclReadResponse, error) {
+	var err error
+
+	var res []*AccessAclReadResponse
+	err = c.Request("GET", "/access/acl", nil, &res)
+
+	if err != nil {
+		return nil, fmt.Errorf("AccessAclRead: %v", err)
+	}
+
+	// output
+	return res, nil
+}
+
 // AccessDomainsCreate POST /access/domains
 // Add an authentication server.
 //
@@ -10008,6 +10008,32 @@ func (c *Client) AccessDomainsCreate(req AccessDomainsCreateRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("AccessDomainsCreate: %v", err)
+	}
+
+	// output
+	return nil
+}
+
+// AccessDomainsUpdate PUT /access/domains/{realm}
+// Update authentication server settings.
+//
+func (c *Client) AccessDomainsUpdate(req AccessDomainsUpdateRequest) error {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return fmt.Errorf("AccessDomainsUpdate: %v", err)
+	}
+
+	input, err := query.Values(req)
+	if err != nil {
+		return fmt.Errorf("AccessDomainsUpdate: %v", err)
+	}
+
+	err = c.Request("PUT", fmt.Sprintf("/access/domains/%v", req.Realm), strings.NewReader(c.replaceBool(input.Encode())), nil)
+
+	if err != nil {
+		return fmt.Errorf("AccessDomainsUpdate: %v", err)
 	}
 
 	// output
@@ -10050,32 +10076,6 @@ func (c *Client) AccessDomainsRead(req AccessDomainsReadRequest) error {
 
 	if err != nil {
 		return fmt.Errorf("AccessDomainsRead: %v", err)
-	}
-
-	// output
-	return nil
-}
-
-// AccessDomainsUpdate PUT /access/domains/{realm}
-// Update authentication server settings.
-//
-func (c *Client) AccessDomainsUpdate(req AccessDomainsUpdateRequest) error {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return fmt.Errorf("AccessDomainsUpdate: %v", err)
-	}
-
-	input, err := query.Values(req)
-	if err != nil {
-		return fmt.Errorf("AccessDomainsUpdate: %v", err)
-	}
-
-	err = c.Request("PUT", fmt.Sprintf("/access/domains/%v", req.Realm), strings.NewReader(c.replaceBool(input.Encode())), nil)
-
-	if err != nil {
-		return fmt.Errorf("AccessDomainsUpdate: %v", err)
 	}
 
 	// output
@@ -10205,6 +10205,28 @@ func (c *Client) AccessTfaVerify(req AccessTfaVerifyRequest) (*AccessTfaVerifyRe
 	return res, nil
 }
 
+// AccessTfaListUser GET /access/tfa/{userid}
+// List TFA configurations of users.
+//
+func (c *Client) AccessTfaListUser(req AccessTfaListUserRequest) ([]*AccessTfaListUserResponse, error) {
+	var err error
+
+	if err = c.validate(req); err != nil {
+		// values not valid, deal with errors here
+		return nil, fmt.Errorf("AccessTfaListUser: %v", err)
+	}
+
+	var res []*AccessTfaListUserResponse
+	err = c.Request("GET", fmt.Sprintf("/access/tfa/%v", req.Userid), nil, &res)
+
+	if err != nil {
+		return nil, fmt.Errorf("AccessTfaListUser: %v", err)
+	}
+
+	// output
+	return res, nil
+}
+
 // AccessTfaAddEntry POST /access/tfa/{userid}
 // Add a TFA entry for a user.
 //
@@ -10226,28 +10248,6 @@ func (c *Client) AccessTfaAddEntry(req AccessTfaAddEntryRequest) (*AccessTfaAddE
 
 	if err != nil {
 		return nil, fmt.Errorf("AccessTfaAddEntry: %v", err)
-	}
-
-	// output
-	return res, nil
-}
-
-// AccessTfaListUser GET /access/tfa/{userid}
-// List TFA configurations of users.
-//
-func (c *Client) AccessTfaListUser(req AccessTfaListUserRequest) ([]*AccessTfaListUserResponse, error) {
-	var err error
-
-	if err = c.validate(req); err != nil {
-		// values not valid, deal with errors here
-		return nil, fmt.Errorf("AccessTfaListUser: %v", err)
-	}
-
-	var res []*AccessTfaListUserResponse
-	err = c.Request("GET", fmt.Sprintf("/access/tfa/%v", req.Userid), nil, &res)
-
-	if err != nil {
-		return nil, fmt.Errorf("AccessTfaListUser: %v", err)
 	}
 
 	// output
