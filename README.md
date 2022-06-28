@@ -4,7 +4,8 @@ proxmox-api is a Go client for accessing and managing Proxmox VE instances using
 
 Now, full disclosure. I only recently started my journey with proxmox while migrating from different hypervisor. 
 One of my requirements when selecting new hypervisor was API coverage good enough to automate everything from provisioning VM's to designing network around them.
-Since there was none, this project is my effort to provide such API for PVE.
+
+Proxmox API checked most of the boxes, but I have not found existing SDK for GO that would cover everything I need. This project is my effort to provide such SDK for PVE and GO.
 
 There are few things you need to know before you try it:
 - Files prefixed with client_* are 100% generated from json schema.
