@@ -100,7 +100,7 @@ if err != nil {
 }
 ```
 
-Every method and type are document based on proxmox docs attached to the schema.
+Every method, type and property are documented based on proxmox docs attached to the schema.
 
 # TODO #
 
