@@ -24,7 +24,7 @@ import (
     "fmt"
     "log"
     
-    "github.com/r3dsh/proxmox-api/v1"
+    "github.com/r3dsh/proxmox-api-go/v1"
 )
 
 c, err := proxmox.NewClient(&proxmox.Config{
